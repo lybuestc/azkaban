@@ -1,0 +1,30 @@
+#Thu Mar 30 21:38:46 PDT 2017
+azkaban.flow.start.timezone=America/Los_Angeles
+azkaban.job.innodes=
+azkaban.flow.flowid=D
+azkaban.flow.start.second=46
+azkaban.flow.submituser=azkaban
+command=echo "jobs start"
+azkaban.flow.uuid=097ba6ea-f172-4a0f-813e-d2af3f5ae2cf
+type=command
+azkaban.flow.start.timestamp=2017-03-30T21\:38\:46.179-07\:00
+azkaban.job.id=start
+azkaban.job.attachment.file=/Users/lybuestc/develop/openSource/azkaban/executions/3/_job.3.start.attach
+azkaban.job.attempt=0
+azkaban.flow.start.milliseconds=179
+azkaban.flow.start.hour=21
+azkaban.flow.projectname=vacuumProject
+azkaban.memory.check=true
+azkaban.job.outnodes=A,B
+azkaban.job.metadata.file=_job.3.start.meta
+azkaban.flow.projectlastchangeddate=1490933987178
+azkaban.flow.projectlastchangedby=azkaban
+azkaban.flow.start.year=2017
+working.dir=/Users/lybuestc/develop/openSource/azkaban/executions/3
+azkaban.flow.start.month=03
+jvm.args=-Dazkaban.flowid\=D -Dazkaban.execid\=3 -Dazkaban.jobid\=start
+azkaban.flow.projectid=1
+azkaban.flow.start.minute=38
+azkaban.flow.execid=3
+azkaban.flow.projectversion=1
+azkaban.flow.start.day=30
