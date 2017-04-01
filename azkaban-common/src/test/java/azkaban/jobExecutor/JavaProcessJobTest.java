@@ -16,24 +16,15 @@
 
 package azkaban.jobExecutor;
 
-import java.io.IOException;
-import java.io.File;
-import java.util.Date;
-import java.util.Properties;
-
+import azkaban.utils.Props;
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.Rule;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 
-import azkaban.flow.CommonJobProperties;
-import azkaban.utils.Props;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Properties;
 
 public class JavaProcessJobTest {
   @ClassRule
@@ -119,6 +110,7 @@ public class JavaProcessJobTest {
   @Test
   public void testJavaJob() throws Exception {
     // initialize the Props
+    //todo 输入路径和输出路径,然后run,该单测成功通过
     props.put(JavaProcessJob.JAVA_CLASS,
         "azkaban.jobExecutor.WordCountLocal");
     props.put("input", inputFile);

@@ -16,34 +16,6 @@
 
 package azkaban.webapp.servlet;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDateTime;
-import org.joda.time.Minutes;
-import org.joda.time.ReadablePeriod;
-import org.joda.time.format.DateTimeFormat;
-
 import azkaban.executor.ExecutableFlow;
 import azkaban.executor.ExecutionOptions;
 import azkaban.executor.ExecutorManagerAdapter;
@@ -56,8 +28,8 @@ import azkaban.project.ProjectManager;
 import azkaban.scheduler.Schedule;
 import azkaban.scheduler.ScheduleManager;
 import azkaban.scheduler.ScheduleManagerException;
-import azkaban.server.session.Session;
 import azkaban.server.HttpRequestUtils;
+import azkaban.server.session.Session;
 import azkaban.sla.SlaOption;
 import azkaban.user.Permission;
 import azkaban.user.Permission.Type;
@@ -68,6 +40,17 @@ import azkaban.utils.SplitterOutputStream;
 import azkaban.utils.Utils;
 import azkaban.webapp.AzkabanWebServer;
 import azkaban.webapp.SchedulerStatistics;
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
+import org.joda.time.*;
+import org.joda.time.format.DateTimeFormat;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.*;
 
 public class ScheduleServlet extends LoginAbstractAzkabanServlet {
   private static final long serialVersionUID = 1L;
@@ -113,8 +96,10 @@ public class ScheduleServlet extends LoginAbstractAzkabanServlet {
       ajaxLoadHistory(req, resp, session.getUser());
       ret = null;
     } else if (ajaxName.equals("scheduleFlow")) {
+      // 马上调度
       ajaxScheduleFlow(req, ret, session.getUser());
     } else if (ajaxName.equals("scheduleCronFlow")) {
+      // 按Cron调度
       ajaxScheduleCronFlow(req, ret, session.getUser());
     } else if (ajaxName.equals("fetchSchedule")) {
       ajaxFetchSchedule(req, ret, session.getUser());

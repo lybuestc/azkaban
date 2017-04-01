@@ -16,20 +16,19 @@
 
 package azkaban.jobExecutor;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.log4j.Logger;
-
 import azkaban.flow.CommonJobProperties;
 import azkaban.jobExecutor.utils.process.AzkabanProcess;
 import azkaban.jobExecutor.utils.process.AzkabanProcessBuilder;
 import azkaban.utils.Pair;
 import azkaban.utils.Props;
 import azkaban.utils.SystemMemoryInfo;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A job that runs a simple unix command
@@ -112,20 +111,20 @@ public class ProcessJob extends AbstractProcessJob {
     // by default, run as effectiveUser
     String executeAsUserBinaryPath = null;
     String effectiveUser = null;
-    boolean isExecuteAsUser = sysProps.getBoolean(EXECUTE_AS_USER, true);
-
+//    boolean isExecuteAsUser = sysProps.getBoolean(EXECUTE_AS_USER, true);
+    boolean isExecuteAsUser = false;
     // nativeLibFolder specifies the path for execute-as-user file,
     // which will change user from Azkaban to effectiveUser
-    if (isExecuteAsUser) {
-      String nativeLibFolder = sysProps.getString(NATIVE_LIB_FOLDER);
-      executeAsUserBinaryPath =
-          String.format("%s/%s", nativeLibFolder, "execute-as-user");
-      effectiveUser = getEffectiveUser(jobProps);
-      if ("root".equals(effectiveUser)) {
-        throw new RuntimeException(
-            "Not permitted to proxy as root through Azkaban");
-      }
-    }
+//    if (isExecuteAsUser) {
+//      String nativeLibFolder = sysProps.getString(NATIVE_LIB_FOLDER);
+//      executeAsUserBinaryPath =
+//          String.format("%s/%s", nativeLibFolder, "execute-as-user");
+//      effectiveUser = getEffectiveUser(jobProps);
+//      if ("root".equals(effectiveUser)) {
+//        throw new RuntimeException(
+//            "Not permitted to proxy as root through Azkaban");
+//      }
+//    }
 
     for (String command : commands) {
       AzkabanProcessBuilder builder = null;

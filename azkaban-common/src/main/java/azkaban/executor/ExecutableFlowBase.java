@@ -178,7 +178,7 @@ public class ExecutableFlowBase extends ExecutableNode {
     }
 
   }
-
+//没有父节点即可开始
   public List<String> getStartNodes() {
     if (startNodes == null) {
       startNodes = new ArrayList<String>();

@@ -1,0 +1,31 @@
+#Sat Apr 01 17:00:02 CST 2017
+azkaban.flow.start.timezone=Asia/Shanghai
+azkaban.job.innodes=A,B
+azkaban.flow.flowid=D
+azkaban.flow.start.second=02
+azkaban.flow.submituser=azkaban
+command=echo "This C job"
+azkaban.flow.uuid=1e81483d-13bc-4d04-aed3-2e3242b773f5
+type=command
+azkaban.flow.start.timestamp=2017-04-01T17\:00\:02.475+08\:00
+azkaban.job.id=C
+azkaban.job.attachment.file=/Users/lybuestc/develop/openSource/azkaban/executions/27/_job.27.C.attach
+azkaban.job.attempt=0
+azkaban.flow.start.milliseconds=475
+azkaban.flow.start.hour=17
+azkaban.flow.projectname=DAG2
+azkaban.memory.check=true
+azkaban.job.outnodes=D
+azkaban.job.metadata.file=_job.27.C.meta
+dependencies=A,B
+azkaban.flow.projectlastchangeddate=1491030411612
+azkaban.flow.projectlastchangedby=azkaban
+azkaban.flow.start.year=2017
+working.dir=/Users/lybuestc/develop/openSource/azkaban/executions/27
+azkaban.flow.start.month=04
+jvm.args=-Dazkaban.flowid\=D -Dazkaban.execid\=27 -Dazkaban.jobid\=C
+azkaban.flow.projectid=2
+azkaban.flow.start.minute=00
+azkaban.flow.execid=27
+azkaban.flow.projectversion=5
+azkaban.flow.start.day=01

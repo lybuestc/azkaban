@@ -16,31 +16,9 @@
 
 package azkaban.webapp.servlet;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.log4j.Logger;
-
 import azkaban.constants.ServerProperties;
-import azkaban.executor.ConnectorParams;
-import azkaban.executor.ExecutableFlow;
-import azkaban.executor.ExecutableFlowBase;
-import azkaban.executor.ExecutableNode;
-import azkaban.executor.ExecutionOptions;
+import azkaban.executor.*;
 import azkaban.executor.ExecutionOptions.FailureAction;
-import azkaban.executor.Executor;
-import azkaban.executor.ExecutorManagerAdapter;
-import azkaban.executor.ExecutorManagerException;
-import azkaban.executor.Status;
 import azkaban.flow.Flow;
 import azkaban.project.Project;
 import azkaban.project.ProjectManager;
@@ -60,6 +38,18 @@ import azkaban.utils.Props;
 import azkaban.webapp.AzkabanWebServer;
 import azkaban.webapp.plugin.PluginRegistry;
 import azkaban.webapp.plugin.ViewerPlugin;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ExecutorServlet extends LoginAbstractAzkabanServlet {
   private static final Logger LOGGER =
@@ -840,6 +830,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     ret.putAll(flowObj);
   }
 
+  //立即执行flow
   private void ajaxAttemptExecuteFlow(HttpServletRequest req,
       HttpServletResponse resp, HashMap<String, Object> ret, User user)
       throws ServletException {

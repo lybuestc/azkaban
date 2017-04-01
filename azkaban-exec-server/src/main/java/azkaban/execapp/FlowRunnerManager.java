@@ -437,6 +437,7 @@ public class FlowRunnerManager implements EventListener,
     }
 
     ExecutableFlow flow = null;
+    //取出要执行的任务
     flow = executorLoader.fetchExecutableFlow(execId);
     if (flow == null) {
       throw new ExecutorManagerException("Error loading flow with exec "
@@ -479,6 +480,7 @@ public class FlowRunnerManager implements EventListener,
       }
     }
 
+    //构造要执行的Flow类
     FlowRunner runner =
         new FlowRunner(flow, executorLoader, projectLoader, jobtypeManager, azkabanProps);
     runner.setFlowWatcher(watcher)
@@ -502,6 +504,7 @@ public class FlowRunnerManager implements EventListener,
       // The submit method below actually returns an instance of FutureTask,
       // which implements interface RunnableFuture, which extends both
       // Runnable and Future interfaces
+      // 真正执行执行
       Future<?> future = executorService.submit(runner);
       // keep track of this future
       submittedFlows.put(future, runner.getExecutionId());

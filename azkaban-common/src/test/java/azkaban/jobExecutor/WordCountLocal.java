@@ -16,18 +16,13 @@
 
 package azkaban.jobExecutor;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import azkaban.utils.Props;
+import org.apache.log4j.Logger;
+
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import org.apache.log4j.Logger;
-
-import azkaban.utils.Props;
 
 public class WordCountLocal extends AbstractJob {
 
@@ -81,6 +76,7 @@ public class WordCountLocal extends AbstractJob {
     in.close();
 
     PrintWriter out = new PrintWriter(new FileOutputStream(_output));
+    System.out.println("成功完成~~~~");
     for (Map.Entry<String, Integer> entry : _dic.entrySet()) {
       out.println(entry.getKey() + "\t" + entry.getValue());
     }

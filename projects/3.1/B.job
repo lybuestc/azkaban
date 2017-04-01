@@ -1,0 +1,5 @@
+#B.job
+type=command
+command=echo "This B job"
+dependencies=start
+

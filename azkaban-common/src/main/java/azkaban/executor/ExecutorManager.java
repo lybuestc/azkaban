@@ -957,6 +957,7 @@ public class ExecutorManager extends EventHandler implements
     }
   }
 
+  //提交一个执行流,即给execution_flows中插入一条数据
   @Override
   public String submitExecutableFlow(ExecutableFlow exflow, String userId)
     throws ExecutorManagerException {
@@ -1867,6 +1868,7 @@ public class ExecutorManager extends EventHandler implements
       }
     }
 
+    // 获取任务和下发
     /* process flow with a snapshot of available Executors */
     private void selectExecutorAndDispatchFlow(ExecutionReference reference,
       ExecutableFlow exflow, Set<Executor> availableExecutors)

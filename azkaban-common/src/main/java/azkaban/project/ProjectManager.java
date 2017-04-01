@@ -469,6 +469,7 @@ public class ProjectManager {
         throw new ProjectManagerException("Unknown file type for "
             + archive.getName());
       } else if ("zip".equals(fileType)) {
+        //解压文件
         file = unzipFile(archive);
       } else {
         throw new ProjectManagerException("Unsupported archive type for file "
@@ -507,6 +508,7 @@ public class ProjectManager {
     logger.info("Validating project " + archive.getName()
         + " using the registered validators "
         + validatorManager.getValidatorsInfo().toString());
+    //加载解压后的文件,
     Map<String, ValidationReport> reports = validatorManager.validate(project, file);
     ValidationStatus status = ValidationStatus.PASS;
     for (Entry<String, ValidationReport> report : reports.entrySet()) {
@@ -540,7 +542,7 @@ public class ProjectManager {
         flow.setProjectId(project.getId());
         flow.setVersion(newVersion);
       }
-
+//将文件,flow等插入db
       logger.info("Uploading file to db " + archive.getName());
       projectLoader.uploadProjectFile(project, newVersion, fileType,
           archive.getName(), archive, uploader.getUserId());
@@ -550,14 +552,14 @@ public class ProjectManager {
       projectLoader.changeProjectVersion(project, newVersion,
           uploader.getUserId());
       project.setFlows(flows);
-      logger.info("Uploading Job properties");
+      logger.info("Uploading Job properties");//每个.job文件单独一行
       projectLoader.uploadProjectProperties(project, new ArrayList<Props>(
           jobProps.values()));
       logger.info("Uploading Props properties");
       projectLoader.uploadProjectProperties(project, propProps);
     }
 
-    logger.info("Uploaded project files. Cleaning up temp files.");
+    logger.info("Uploaded project files. Cleaning up temp files.");//在project_events里插入一条记录
     projectLoader.postEvent(project, EventType.UPLOADED, uploader.getUserId(),
         "Uploaded project files zip " + archive.getName());
     try {

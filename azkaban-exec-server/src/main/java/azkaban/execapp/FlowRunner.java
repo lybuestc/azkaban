@@ -16,27 +16,6 @@
 
 package azkaban.execapp;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.RejectedExecutionException;
-
-import org.apache.log4j.Appender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Layout;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-
 import azkaban.event.Event;
 import azkaban.event.Event.Type;
 import azkaban.event.EventData;
@@ -47,14 +26,8 @@ import azkaban.execapp.event.JobCallbackManager;
 import azkaban.execapp.jmx.JmxJobMBeanManager;
 import azkaban.execapp.metric.NumFailedJobMetric;
 import azkaban.execapp.metric.NumRunningJobMetric;
-import azkaban.executor.ExecutableFlow;
-import azkaban.executor.ExecutableFlowBase;
-import azkaban.executor.ExecutableNode;
-import azkaban.executor.ExecutionOptions;
+import azkaban.executor.*;
 import azkaban.executor.ExecutionOptions.FailureAction;
-import azkaban.executor.ExecutorLoader;
-import azkaban.executor.ExecutorManagerException;
-import azkaban.executor.Status;
 import azkaban.flow.FlowProps;
 import azkaban.jobExecutor.ProcessJob;
 import azkaban.jobtype.JobTypeManager;
@@ -64,6 +37,15 @@ import azkaban.project.ProjectManagerException;
 import azkaban.utils.Props;
 import azkaban.utils.PropsUtils;
 import azkaban.utils.SwapQueue;
+import org.apache.log4j.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * Class that handles the running of a ExecutableFlow DAG
@@ -216,6 +198,7 @@ public class FlowRunner extends EventHandler implements Runnable {
       loadAllProperties();
 
       this.fireEventListeners(Event.create(this, Type.FLOW_STARTED, new EventData(this.getExecutableFlow().getStatus())));
+      // 运行flow
       runFlow();
     } catch (Throwable t) {
       if (logger != null) {
@@ -502,6 +485,7 @@ public class FlowRunner extends EventHandler implements Runnable {
     return false;
   }
 
+  //开始执行job
   private boolean runReadyJob(ExecutableNode node) throws IOException {
     if (Status.isStatusFinished(node.getStatus())
         || Status.isStatusRunning(node.getStatus())) {
@@ -524,6 +508,9 @@ public class FlowRunner extends EventHandler implements Runnable {
       finishExecutableNode(node);
     } else if (nextNodeStatus == Status.READY) {
       if (node instanceof ExecutableFlowBase) {
+        //因为单个节点ExecutableNode类型也可以用ExecutableFlowBase类型来个内部流,
+        //因此第一遍传进来的是真个flow图的类型,然后通过了这一步之后再下一次调用runReadyJob时才是ExecutableNode
+        //类型,进行真正的执行
         ExecutableFlowBase flow = ((ExecutableFlowBase) node);
         logger.info("Running flow '" + flow.getNestedId() + "'.");
         flow.setStatus(Status.RUNNING);
@@ -532,9 +519,11 @@ public class FlowRunner extends EventHandler implements Runnable {
 
         for (String startNodeId : ((ExecutableFlowBase) node).getStartNodes()) {
           ExecutableNode startNode = flow.getExecutableNode(startNodeId);
+          // 将没有入度的节点开始执行
           runReadyJob(startNode);
         }
       } else {
+        // 上面筛选出来的开始执行的节点
         runExecutableNode(node);
       }
     }

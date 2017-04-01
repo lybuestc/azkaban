@@ -16,26 +16,7 @@
 
 package azkaban.project;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-
-import azkaban.flow.CommonJobProperties;
-import azkaban.flow.Edge;
-import azkaban.flow.Flow;
-import azkaban.flow.FlowProps;
-import azkaban.flow.Node;
-import azkaban.flow.SpecialJobTypes;
+import azkaban.flow.*;
 import azkaban.jobcallback.JobCallbackValidator;
 import azkaban.project.validator.ProjectValidator;
 import azkaban.project.validator.ValidationReport;
@@ -43,6 +24,12 @@ import azkaban.project.validator.XmlValidatorManager;
 import azkaban.utils.Props;
 import azkaban.utils.PropsUtils;
 import azkaban.utils.Utils;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.util.*;
 
 public class DirectoryFlowLoader implements ProjectValidator {
   private static final DirFilter DIR_FILTER = new DirFilter();
@@ -147,7 +134,7 @@ public class DirectoryFlowLoader implements ProjectValidator {
     // Create the flows.
     buildFlowsFromDependencies();
 
-    // Resolve embedded flows
+    // Resolve embedded flows 内部有flow组件的情况
     resolveEmbeddedFlows();
 
   }
@@ -314,7 +301,7 @@ public class DirectoryFlowLoader implements ProjectValidator {
   }
 
   private void buildFlowsFromDependencies() {
-    // Find all root nodes by finding ones without dependents.
+    // Find all root nodes by finding ones without dependents. 找出的是所有的非根节点
     HashSet<String> nonRootNodes = new HashSet<String>();
     for (Map<String, Edge> edges : nodeDependencies.values()) {
       for (String sourceId : edges.keySet()) {

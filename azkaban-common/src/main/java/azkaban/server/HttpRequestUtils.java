@@ -42,7 +42,7 @@ public class HttpRequestUtils {
   public static ExecutionOptions parseFlowOptions(HttpServletRequest req)
       throws ServletException {
     ExecutionOptions execOptions = new ExecutionOptions();
-
+    // 失败后的处理策略
     if (hasParam(req, "failureAction")) {
       String option = getParam(req, "failureAction");
       if (option.equals("finishCurrent")) {
@@ -107,7 +107,7 @@ public class HttpRequestUtils {
 
     Map<String, String> flowParamGroup = getParamGroup(req, "flowOverride");
     execOptions.addAllFlowParameters(flowParamGroup);
-
+    //取消执行job
     if (hasParam(req, "disabled")) {
       String disabled = getParam(req, "disabled");
       if (!disabled.isEmpty()) {

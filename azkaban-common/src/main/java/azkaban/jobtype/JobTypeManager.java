@@ -16,6 +16,13 @@
 
 package azkaban.jobtype;
 
+import azkaban.jobExecutor.*;
+import azkaban.jobExecutor.utils.JobExecutionException;
+import azkaban.utils.Props;
+import azkaban.utils.PropsUtils;
+import azkaban.utils.Utils;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -23,20 +30,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.log4j.Logger;
-
-import azkaban.jobExecutor.JavaProcessJob;
-import azkaban.jobExecutor.Job;
-import azkaban.jobExecutor.NoopJob;
-import azkaban.jobExecutor.ProcessJob;
-import azkaban.jobExecutor.PythonJob;
-import azkaban.jobExecutor.RubyJob;
-import azkaban.jobExecutor.ScriptJob;
-import azkaban.jobExecutor.utils.JobExecutionException;
-import azkaban.utils.Props;
-import azkaban.utils.PropsUtils;
-import azkaban.utils.Utils;
 
 public class JobTypeManager {
   private final String jobTypePluginDir; // the dir for jobtype plugins
@@ -93,6 +86,7 @@ public class JobTypeManager {
   private void loadDefaultTypes(JobTypePluginSet plugins)
       throws JobTypeManagerException {
     logger.info("Loading plugin default job types");
+    //不同的job使用不同的job处理器
     plugins.addPluginClass("command", ProcessJob.class);
     plugins.addPluginClass("javaprocess", JavaProcessJob.class);
     plugins.addPluginClass("noop", NoopJob.class);
