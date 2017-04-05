@@ -151,7 +151,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
       String projectName = getParam(req, "project");
 
       ret.put("project", projectName);
-      if (ajaxName.equals("executeFlow")) {
+      if (ajaxName.equals("executeFlow")) {//请求执行flow
         ajaxAttemptExecuteFlow(req, resp, ret, session.getUser());
       }
     }

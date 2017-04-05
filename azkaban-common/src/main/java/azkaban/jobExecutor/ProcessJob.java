@@ -89,6 +89,7 @@ public class ProcessJob extends AbstractProcessJob {
 
     List<String> commands = null;
     try {
+      // 构造java命令, java xx.jar执行jar文件
       commands = getCommandList();
     } catch (Exception e) {
       handleError("Job set up failed " + e.getCause(), e);

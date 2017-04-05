@@ -370,6 +370,7 @@ public class FlowRunner extends EventHandler implements Runnable {
           if (retryFailedJobs) {
             retryAllFailures();
           } else if (!progressGraph()) {
+            //如果flow没完成就继续处理图
             try {
               mainSyncObj.wait(CHECK_WAIT_MS);
             } catch (InterruptedException e) {
@@ -414,6 +415,7 @@ public class FlowRunner extends EventHandler implements Runnable {
     updateFlow();
   }
 
+  // 处理flow的逻辑
   private boolean progressGraph() throws IOException {
     finishedNodes.swap();
 
@@ -421,7 +423,7 @@ public class FlowRunner extends EventHandler implements Runnable {
     // that are candidates for running next.
     HashSet<ExecutableNode> nodesToCheck = new HashSet<ExecutableNode>();
     for (ExecutableNode node : finishedNodes) {
-      Set<String> outNodeIds = node.getOutNodes();
+      Set<String> outNodeIds = node.getOutNodes();//出度节点,即下一个刻需要触发的job
       ExecutableFlowBase parentFlow = node.getParentFlow();
 
       // If a job is seen as failed, then we set the parent flow to
@@ -442,9 +444,10 @@ public class FlowRunner extends EventHandler implements Runnable {
       }
 
       if (outNodeIds.isEmpty()) {
+        //没有out节点证明到最后一个节点了,flow处理完成,将
         // There's no outnodes means it's the end of a flow, so we finalize
         // and fire an event.
-        finalizeFlow(parentFlow);
+        finalizeFlow(parentFlow);//执行flowFinished = true; flow正式完成
         finishExecutableNode(parentFlow);
 
         // If the parent has a parent, then we process
@@ -1064,6 +1067,7 @@ public class FlowRunner extends EventHandler implements Runnable {
           finishedNodes.add(node);
           node.getParentFlow().setUpdateTime(System.currentTimeMillis());
           interrupt();
+          // 执行完成后又触发listener:FlowRunnerManager,来决定下一个触发谁
           fireEventListeners(event);
         }
       }

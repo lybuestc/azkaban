@@ -480,7 +480,7 @@ public class FlowRunnerManager implements EventListener,
       }
     }
 
-    //构造要执行的Flow类
+    //构造要执行的Flow类,将this addListener,方便任务执行完回调,然后继续触发下一个
     FlowRunner runner =
         new FlowRunner(flow, executorLoader, projectLoader, jobtypeManager, azkabanProps);
     runner.setFlowWatcher(watcher)

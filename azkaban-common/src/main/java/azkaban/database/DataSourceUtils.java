@@ -16,18 +16,16 @@
 
 package azkaban.database;
 
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
+import azkaban.utils.Props;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.log4j.Logger;
 
-import java.sql.PreparedStatement;
+import javax.sql.DataSource;
 import java.sql.Connection;
-
-import azkaban.utils.Props;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 public class DataSourceUtils {
 
@@ -162,6 +160,11 @@ public class DataSourceUtils {
       return "mysql";
     }
 
+    @Override
+    public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
+      return null;
+    }
+
     private class MonitorThread extends Thread {
       private static final long MONITOR_THREAD_WAIT_INTERVAL_MS = 30 * 1000;
       private boolean shutdown = false;
@@ -228,6 +231,11 @@ public class DataSourceUtils {
     @Override
     public String getDBType() {
       return "h2";
+    }
+
+    @Override
+    public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
+      return null;
     }
   }
 

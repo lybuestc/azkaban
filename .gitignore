@@ -14,3 +14,9 @@ build/
 *.iml
 *.ipr
 *.iws
+
+
+#临时目录
+executions
+projects
+

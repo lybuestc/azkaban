@@ -16,27 +16,6 @@
 
 package azkaban.execapp;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Optional;
-
-import org.apache.log4j.Appender;
-import org.apache.log4j.EnhancedPatternLayout;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Layout;
-import org.apache.log4j.Logger;
-import org.apache.log4j.RollingFileAppender;
-
-import org.apache.kafka.log4jappender.KafkaLog4jAppender;
-
-import org.json.simple.JSONObject;
-
 import azkaban.constants.FlowProperties;
 import azkaban.constants.JobProperties;
 import azkaban.constants.ServerProperties;
@@ -46,22 +25,22 @@ import azkaban.event.EventData;
 import azkaban.event.EventHandler;
 import azkaban.execapp.event.BlockingStatus;
 import azkaban.execapp.event.FlowWatcher;
-import azkaban.executor.ExecutableFlowBase;
-import azkaban.executor.ExecutableNode;
-import azkaban.executor.ExecutorLoader;
-import azkaban.executor.ExecutorManagerException;
-import azkaban.executor.Status;
+import azkaban.executor.*;
 import azkaban.flow.CommonJobProperties;
 import azkaban.jobExecutor.AbstractProcessJob;
 import azkaban.jobExecutor.JavaProcessJob;
 import azkaban.jobExecutor.Job;
 import azkaban.jobtype.JobTypeManager;
 import azkaban.jobtype.JobTypeManagerException;
-import azkaban.utils.ExternalLinkUtils;
-import azkaban.utils.Props;
-import azkaban.utils.StringUtils;
-import azkaban.utils.UndefinedPropertyException;
-import azkaban.utils.PatternLayoutEscaped;
+import azkaban.utils.*;
+import org.apache.kafka.log4jappender.KafkaLog4jAppender;
+import org.apache.log4j.*;
+import org.json.simple.JSONObject;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.*;
 
 public class JobRunner extends EventHandler implements Runnable {
   public static final String AZKABAN_WEBSERVER_URL = "azkaban.webserver.url";
@@ -620,6 +599,7 @@ public class JobRunner extends EventHandler implements Runnable {
       }
 
       try {
+        // 根据build出来的类型来决定如何调用,比如java应用就直接调用类的run方法;
         job = jobtypeManager.buildJobExecutor(this.jobId, props, logger);
       } catch (JobTypeManagerException e) {
         logger.error("Failed to build job type", e);
