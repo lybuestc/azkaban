@@ -196,7 +196,7 @@ public class FlowRunner extends EventHandler implements Runnable {
       updateFlow();
       logger.info("Fetching job and shared properties.");
       loadAllProperties();
-
+      System.out.println("--------触发flow_started监听1");
       this.fireEventListeners(Event.create(this, Type.FLOW_STARTED, new EventData(this.getExecutableFlow().getStatus())));
       // 运行flow
       runFlow();
@@ -222,6 +222,7 @@ public class FlowRunner extends EventHandler implements Runnable {
       closeLogger();
 
       updateFlow();
+      System.out.println("========触发flow_finished监听3");
       this.fireEventListeners(Event.create(this, Type.FLOW_FINISHED, new EventData(flow.getStatus())));
     }
   }
@@ -356,7 +357,7 @@ public class FlowRunner extends EventHandler implements Runnable {
     logger.info("Starting flows");
     runReadyJob(this.flow);
     updateFlow();
-
+    //同步的,flow没完成就等待,下次触发的时候可以根据flow状态来决定忽略还是记录下来补偿
     while (!flowFinished) {
       synchronized (mainSyncObj) {
         if (flowPaused) {
@@ -421,6 +422,7 @@ public class FlowRunner extends EventHandler implements Runnable {
 
     // The following nodes are finished, so we'll collect a list of outnodes
     // that are candidates for running next.
+    //扫描已完成的node列表;其出度的节点为下一个备选节点
     HashSet<ExecutableNode> nodesToCheck = new HashSet<ExecutableNode>();
     for (ExecutableNode node : finishedNodes) {
       Set<String> outNodeIds = node.getOutNodes();//出度节点,即下一个刻需要触发的job
@@ -514,6 +516,7 @@ public class FlowRunner extends EventHandler implements Runnable {
         //因为单个节点ExecutableNode类型也可以用ExecutableFlowBase类型来个内部流,
         //因此第一遍传进来的是真个flow图的类型,然后通过了这一步之后再下一次调用runReadyJob时才是ExecutableNode
         //类型,进行真正的执行
+        //每个flow只会调用一遍
         ExecutableFlowBase flow = ((ExecutableFlowBase) node);
         logger.info("Running flow '" + flow.getNestedId() + "'.");
         flow.setStatus(Status.RUNNING);
@@ -568,6 +571,7 @@ public class FlowRunner extends EventHandler implements Runnable {
   private void finishExecutableNode(ExecutableNode node) {
     finishedNodes.add(node);
     EventData eventData = new EventData(node.getStatus(), node.getNestedId());
+    System.out.println("~~~~~触发job_finished监听1");
     fireEventListeners(Event.create(this, Type.JOB_FINISHED, eventData));
   }
 
@@ -1068,7 +1072,8 @@ public class FlowRunner extends EventHandler implements Runnable {
           node.getParentFlow().setUpdateTime(System.currentTimeMillis());
           interrupt();
           // 执行完成后又触发listener:FlowRunnerManager,来决定下一个触发谁
-          fireEventListeners(event);
+          System.out.println("收到job_finished事件,继续触发"+event.getType());
+          fireEventListeners(event);//这里调用的是LocalFlowWatcher中的handleEvent
         }
       }
     }

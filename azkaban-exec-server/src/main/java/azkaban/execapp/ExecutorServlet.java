@@ -16,34 +16,26 @@
 
 package azkaban.execapp;
 
+import azkaban.constants.ServerInternals;
+import azkaban.executor.*;
+import azkaban.utils.FileIOUtils.JobMetaData;
+import azkaban.utils.FileIOUtils.LogData;
+import azkaban.utils.JSONUtils;
 import com.google.common.base.Preconditions;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-
-import org.codehaus.jackson.map.ObjectMapper;
-
-import azkaban.constants.ServerInternals;
-import azkaban.executor.ConnectorParams;
-import azkaban.executor.ExecutableFlowBase;
-import azkaban.executor.Executor;
-import azkaban.executor.ExecutorLoader;
-import azkaban.executor.ExecutorManagerException;
-import azkaban.utils.FileIOUtils.JobMetaData;
-import azkaban.utils.FileIOUtils.LogData;
-import azkaban.utils.JSONUtils;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
@@ -126,7 +118,7 @@ public class ExecutorServlet extends HttpServlet implements ConnectorParams {
           } else if (action.equals(ATTACHMENTS_ACTION)) {
             handleFetchAttachmentsEvent(execid, req, resp, respMap);
           } else if (action.equals(EXECUTE_ACTION)) {
-            handleAjaxExecute(req, respMap, execid);
+            handleAjaxExecute(req, respMap, execid);//真正开始执行flow
           } else if (action.equals(STATUS_ACTION)) {
             handleAjaxFlowStatus(respMap, execid);
           } else if (action.equals(CANCEL_ACTION)) {

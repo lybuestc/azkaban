@@ -957,7 +957,7 @@ public class ExecutorManager extends EventHandler implements
     }
   }
 
-  //提交一个执行流,即给execution_flows中插入一条数据
+  //提交一个执行流,即给execution_flows中插入一条数据;是flow的一次执行,每次执行都会提交一个
   @Override
   public String submitExecutableFlow(ExecutableFlow exflow, String userId)
     throws ExecutorManagerException {
@@ -1036,7 +1036,7 @@ public class ExecutorManager extends EventHandler implements
         } else {
           // assign only local executor we have
           Executor choosenExecutor = activeExecutors.iterator().next();
-          executorLoader.addActiveExecutableReference(reference);
+          executorLoader.addActiveExecutableReference(reference);//当前下发的flow id
           try {
             dispatch(reference, exflow, choosenExecutor);
           } catch (ExecutorManagerException e) {
@@ -1244,6 +1244,7 @@ public class ExecutorManager extends EventHandler implements
     @SuppressWarnings("unchecked")
     public void run() {
       while (!shutdown) {
+        //不断扫描已完成的flow
         try {
           lastThreadCheckTime = System.currentTimeMillis();
           updaterStage = "Starting update all flows.";
@@ -1351,6 +1352,7 @@ public class ExecutorManager extends EventHandler implements
                 ScheduleStatisticManager.invalidateCache(flow.getScheduleId(),
                     cacheDir);
               }
+              System.out.println("=======触发flow_finished监听1");
               fireEventListeners(Event.create(flow, Type.FLOW_FINISHED, new EventData(flow.getStatus())));
               recentlyFinished.put(flow.getExecutionId(), flow);
             }
@@ -1417,6 +1419,7 @@ public class ExecutorManager extends EventHandler implements
 
       updaterStage = "finalizing flow " + execId + " cleaning from memory";
       runningFlows.remove(execId);
+      System.out.println("======触发flow_finished监听2");
       fireEventListeners(Event.create(dsFlow, Type.FLOW_FINISHED, new EventData(dsFlow.getStatus())));
       recentlyFinished.put(execId, dsFlow);
 

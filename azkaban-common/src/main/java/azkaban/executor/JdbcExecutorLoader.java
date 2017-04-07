@@ -95,7 +95,7 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
 
     long id;
     try {
-      flow.setStatus(Status.PREPARING);
+      flow.setStatus(Status.PREPARING);//状态设置为准备开始状态
       runner.update(connection, INSERT_EXECUTABLE_FLOW, flow.getProjectId(),
           flow.getFlowId(), flow.getVersion(), Status.PREPARING.getNumVal(),
           submitTime, flow.getSubmitUser(), submitTime);

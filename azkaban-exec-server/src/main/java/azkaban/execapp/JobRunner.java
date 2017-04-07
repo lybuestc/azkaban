@@ -668,6 +668,7 @@ public class JobRunner extends EventHandler implements Runnable {
   }
 
   private Status runJob() {
+    //执行job的逻辑
     Status finalStatus = node.getStatus();
     try {
       job.run();
@@ -707,6 +708,7 @@ public class JobRunner extends EventHandler implements Runnable {
   }
 
   private void fireEvent(Event event) {
+    System.out.println("******jobRunner 触发事件" + event.getType());
     fireEvent(event, true);
   }
 
@@ -714,6 +716,7 @@ public class JobRunner extends EventHandler implements Runnable {
     if (updateTime) {
       node.setUpdateTime(System.currentTimeMillis());
     }
+    System.out.println("jobRunner 触发event " + event.getType());
     this.fireEventListeners(event);
   }
 
